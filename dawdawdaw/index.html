@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Крестики-нолики</title>
+    <script src="data/js/vue.js"></script>
+    <script defer src="data/js/main.js"></script>
+    <link rel="stylesheet" href="data/css/style.css">
+</head>
+<body>
+  <div id="gameApp">
+    <div class="gameStart" v-if="gameStart">
+        <img src="https://cdn.betterttv.net/emote/5dbc173f27360247dd64e4ae/3x">
+        <h1>“Крестики-Нолики”</h1>
+        <p>Игра до боли проста, поставьте три крестика или нолика в ряд и вы победили.</p><br>
+        <p>Сначала введте свои игровые имена и выбеите размер игрового поля.<br>
+        Никнейм должен состоять из не менее чем двух символов, иначе он заменится на случайный.</p>
+        <div class="gameStartSettings">
+          <div class="inputsRecovery">
+            <div class="inputType">
+              <p>Имя первого игрока (Крестик)</p>
+              <input v-model="firstName" placeholder="Введите имя игрока...">
+            </div>
+            <div class="inputType">
+              <p>Имя второго игрока (Нолик)</p>
+              <input v-model="secondName" placeholder="Введите имя игрока...">
+            </div>
+          </div>
+          <div class="checkBox">
+            <p>Размер игрового поля</p>
+            <div class="checkBoxes">
+                <div class="boxC">
+                  <input type="radio" id="three" value="3" v-model="picked" @click="playButton=true">
+                  <label for="three">3x3</label>
+                </div>
+                <div class="boxC">
+              <input type="radio" id="six" value="6" v-model="picked" @click="playButton=true">
+              <label for="six">6x6</label>
+              </div>
+              <div class="boxC">
+              <input type="radio" id="nine" value="9" v-model="picked" @click="playButton=true">
+              <label for="nine">9x9</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="buttonCompressor" v-if="playButton"><button class="buttonPlay" @click="gameStart=false, gamePlay=true, structureMatrix(picked)" v-if="playButton">Играть</button></div>
+  </div>
+  <div class="gamePlay" v-if="gamePlay">
+    <div class="buttonCompressor"><button class="buttonPlay" @click="gameStart=true, gamePlay=false, deleteMatrix()" v-if="playButton">Рестарт</button></div>
+    <div class="pipiApu"><p class="name">{{firstName}}</p> против <p class="name">{{secondName}}</p></div>
+    <p><b>Сейчас ходит:</b>{{tempElementName}}({{tempElement}})</p>
+    <div class="itsGame">
+      <div v-for="(coll, coll_i) in gameBoard" class="rowcoll">
+        <div v-for="(cell, cell_i) in gameBoard[coll_i]" class="rowcell" @click.once="cellChanger(coll_i, cell_i, cell), cellChecker(coll_i, cell_i, cell)">
+          {{cell}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="gameWinner" v-if="gameWinner">
+    <div class="buttonCompressor"><button class="buttonPlay" @click="gameStart=true, gamePlay=false, gameLose=false, gameWinner=false, deleteMatrix()" v-if="playButton">Рестарт</button></div><br>
+    Выиграл {{tempElementName}}
+    <img src="https://static-cdn.jtvnw.net/emoticons/v1/64138/3.0">
+  </div>
+  <div class="gameLose" v-if="gameLose">
+    <div class="buttonCompressor"><button class="buttonPlay" @click="gameStart=true, gamePlay=false, gameLose=false, gameWinner=false, deleteMatrix()" v-if="playButton">Рестарт</button></div><br>
+    Никто не выиграл...
+    Довольны??
+    <img src="https://cdn.betterttv.net/emote/5d324913ff6ed36801311fd2/3x">
+  </div>
+</div>
+</body>
+</html>
